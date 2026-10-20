@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Coffee — Ember &amp; Bean</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Inter:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="../assets/style.css">
+  <script src="../assets/pixel.js"></script>
+</head>
+<body data-base="../">
+<header id="site-header"></header>
+
+<main class="container">
+  <div class="pdp" id="pdp"></div>
+</main>
+
+<footer id="site-footer"></footer>
+
+<script src="../assets/shop.js"></script>
+<script>
+  var id = new URLSearchParams(location.search).get('id');
+  var p = findProduct(id) || PRODUCTS[0];
+  document.title = p.name + ' — Ember & Bean';
+
+  document.getElementById('pdp').innerHTML =
+    '<div class="art">' + bagArt(p) + '</div>' +
+    '<div>' +
+    '  <div class="muted">' + p.origin + '</div>' +
+    '  <h1>' + p.name + '</h1>' +
+    '  <div class="price">' + money(p.price) + ' <span class="muted" style="font-weight:400;font-size:15px">/ 12 oz</span></div>' +
+    '  <dl><dt>Tasting notes</dt><dd>' + p.notes + '</dd><dt>Roast</dt><dd>' + p.roast + '</dd><dt>Grind</dt><dd>Whole bean</dd></dl>' +
+    '  <div class="buy-row">' +
+    '    <select id="qty" aria-label="Quantity"><option>1</option><option>2</option><option>3</option><option>4</option></select>' +
+    '    <button class="btn" id="add-to-bag" type="button">Add to bag</button>' +
+    '  </div>' +
+    '  <button class="text-btn" id="add-to-wishlist" type="button">♡ Save for later</button>' +
+    '  <p class="muted" style="margin-top:24px">Ships within 72 hours of roasting. Free shipping over $40.</p>' +
+    '</div>';
+
+  track('ViewContent', pixelContents([{ product: p, qty: 1 }]));
+
+  document.getElementById('add-to-bag').addEventListener('click', function () {
+    var qty = parseInt(document.getElementById('qty').value, 10);
+    addToCart(p.id, qty);
+    track('AddToCart', pixelContents([{ product: p, qty: qty }]));
+    toast('Added ' + qty + ' × ' + p.name + '<a href="../cart/">View bag</a>');
+  });
+
+  document.getElementById('add-to-wishlist').addEventListener('click', function () {
+    track('AddToWishlist', pixelContents([{ product: p, qty: 1 }]));
+    this.textContent = '♥ Saved';
+  });
+</script>
+</body>
+</html>

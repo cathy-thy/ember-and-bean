@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Thank you — Ember &amp; Bean</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Inter:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="../assets/style.css">
+  <script src="../assets/pixel.js"></script>
+</head>
+<body data-base="../">
+<header id="site-header"></header>
+
+<main>
+  <div class="confirm" id="confirm"></div>
+</main>
+
+<footer id="site-footer"></footer>
+
+<script src="../assets/shop.js"></script>
+<script>
+  var order = null;
+  try { order = JSON.parse(localStorage.getItem('eb_last_order') || 'null'); } catch (e) {}
+  var el = document.getElementById('confirm');
+
+  if (!order) {
+    el.innerHTML = '<h1>Nothing here yet</h1><p class="muted">Looks like you haven\'t placed an order.</p><p><a class="btn" href="../#shop">Shop coffee</a></p>';
+  } else {
+    el.innerHTML =
+      '<div class="check">✓</div>' +
+      '<h1>Thanks for your order!</h1>' +
+      '<p class="muted">Order <strong id="order-number"></strong> · ' + money(order.total) + '</p>' +
+      '<p>A confirmation is on its way to <span id="order-email"></span>. Your coffee goes into the roaster on Tuesday.</p>' +
+      '<p><a class="btn ghost" href="../#shop">Keep shopping</a></p>';
+    document.getElementById('order-number').textContent = order.number;
+    document.getElementById('order-email').textContent = order.email;
+
+    // Fire the purchase once per order, not on every refresh.
+    if (!order.purchaseTracked) {
+      track('CompletePayment', order.payload);
+      order.purchaseTracked = true;
+      try { localStorage.setItem('eb_last_order', JSON.stringify(order)); } catch (e) {}
+    }
+  }
+</script>
+</body>
+</html>

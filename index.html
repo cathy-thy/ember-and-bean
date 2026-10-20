@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ember &amp; Bean — Small-batch coffee roasters</title>
+  <meta name="description" content="Small-batch specialty coffee, roasted every Tuesday and shipped fresh.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Inter:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="./assets/style.css">
+  <script src="./assets/pixel.js"></script>
+</head>
+<body data-base="./">
+<header id="site-header"></header>
+
+<main>
+  <div class="container hero">
+    <div>
+      <h1>Coffee roasted the week you order it.</h1>
+      <p>Single origins and blends from farms we know by name. Roasted in small batches every Tuesday, shipped the same day.</p>
+      <p><a class="btn" id="hero-shop" href="#shop">Shop coffee</a> &nbsp; <a class="btn ghost" href="#subscribe">Get 10% off</a></p>
+    </div>
+    <div class="hero-art" id="hero-art"></div>
+  </div>
+
+  <section id="shop">
+    <div class="container">
+      <div class="section-head">
+        <h2 id="shop-title">Our coffee</h2>
+        <span class="muted" id="shop-sub">Whole bean · 12 oz bags</span>
+      </div>
+      <div class="grid" id="product-grid"></div>
+    </div>
+  </section>
+
+  <section id="story">
+    <div class="container">
+      <div class="section-head"><h2>Why Ember &amp; Bean</h2></div>
+      <div class="story">
+        <div><h3>Roasted weekly</h3><p class="muted">Every bag ships within 72 hours of roasting, so it reaches you at its peak.</p></div>
+        <div><h3>Direct relationships</h3><p class="muted">We buy from the same growers year after year and pay well above Fair Trade minimums.</p></div>
+        <div><h3>Small batches</h3><p class="muted">Each roast is 12 kg or less, profiled by hand for the bean in the drum.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="subscribe">
+    <div class="container">
+      <div class="subscribe">
+        <h2>10% off your first bag</h2>
+        <p>Brew guides, new arrivals and the occasional roaster's note. No spam.</p>
+        <form id="subscribe-form">
+          <input type="email" id="subscribe-email" placeholder="you@example.com" required aria-label="Email">
+          <button class="btn" type="submit" id="subscribe-button">Sign up</button>
+        </form>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer id="site-footer"></footer>
+
+<script src="./assets/shop.js"></script>
+<script>
+  document.getElementById('hero-art').innerHTML = bagArt(PRODUCTS[1]);
+
+  var q = new URLSearchParams(location.search).get('q');
+  var list = PRODUCTS;
+  if (q) {
+    var term = q.trim().toLowerCase();
+    list = PRODUCTS.filter(function (p) {
+      return (p.name + ' ' + p.origin + ' ' + p.notes + ' ' + p.roast).toLowerCase().indexOf(term) !== -1;
+    });
+    document.getElementById('search-input').value = q;
+    document.getElementById('shop-title').textContent = 'Results for “' + q + '”';
+    document.getElementById('shop-sub').textContent = list.length + ' coffee' + (list.length === 1 ? '' : 's');
+    track('Search', { query: q });
+    document.getElementById('shop').scrollIntoView();
+  }
+
+  document.getElementById('product-grid').innerHTML = list.length ? list.map(function (p) {
+    return '<a class="card" href="./product/?id=' + p.id + '">' +
+      '<div class="art">' + bagArt(p) + '</div>' +
+      '<h3>' + p.name + '</h3>' +
+      '<div class="meta">' + p.roast + ' roast · ' + p.notes + '</div>' +
+      '<div class="price">' + money(p.price) + '</div></a>';
+  }).join('') : '<div class="empty">No coffee matches that search. <a href="./#shop">See everything</a></div>';
+
+  document.getElementById('subscribe-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var email = document.getElementById('subscribe-email').value;
+    identifyUser({ email: email });
+    track('Subscribe');
+    this.innerHTML = '<p>Thanks! Check your inbox for your code.</p>';
+  });
+</script>
+</body>
+</html>
