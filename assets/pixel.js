@@ -6,7 +6,7 @@
 //   ?track=on     turn them back on
 //   ?debug=1      show the event log panel (?debug=0 hides it)
 (function () {
-  var DEFAULT_PIXEL = 'DB89AARC77U5NP324L00';
+  var DEFAULT_PIXEL = 'DBBIL6BC77U1A7OSMPSG';
   var params = new URLSearchParams(location.search);
 
   function setting(key, storageKey, fallback) {
