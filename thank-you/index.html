@@ -39,6 +39,7 @@
     // Fire the purchase once per order, not on every refresh.
     if (!order.purchaseTracked) {
       track('CompletePayment', order.payload);
+      track('Custom Purchase', order.payload);
       order.purchaseTracked = true;
       try { localStorage.setItem('eb_last_order', JSON.stringify(order)); } catch (e) {}
     }
