@@ -2,16 +2,16 @@
 var BASE = document.body ? document.body.dataset.base : './';
 
 var PRODUCTS = [
-  { id: 'house-blend', name: 'House Blend', origin: 'Colombia · Brazil', roast: 'Medium', notes: 'Milk chocolate, toasted almond, caramel', price: 16.00, colors: ['#c9773b', '#6b3a1e'] },
-  { id: 'ethiopia-guji', name: 'Ethiopia Guji', origin: 'Guji, Ethiopia', roast: 'Light', notes: 'Blueberry, jasmine, lemon zest', price: 21.00, colors: ['#e3a857', '#8c4b2b'] },
-  { id: 'night-owl', name: 'Night Owl Espresso', origin: 'Sumatra · Guatemala', roast: 'Dark', notes: 'Dark cocoa, molasses, cedar', price: 18.00, colors: ['#5c3a2e', '#1f1410'] },
-  { id: 'decaf-kenya', name: 'Swiss Water Decaf', origin: 'Nyeri, Kenya', roast: 'Medium', notes: 'Blackcurrant, brown sugar, plum', price: 19.00, colors: ['#9b6a4f', '#3d2a22'] }
+  { id: 'house-blend', name: 'House Blend', origin: 'Colombia · Brazil', roast: 'Medium', notes: 'Milk chocolate, toasted almond, caramel', price: 16.00, img: 'house-blend.jpg', colors: ['#c9773b', '#6b3a1e'] },
+  { id: 'ethiopia-guji', name: 'Ethiopia Guji', origin: 'Guji, Ethiopia', roast: 'Light', notes: 'Blueberry, jasmine, lemon zest', price: 21.00, img: 'ethiopia-guji.jpg', colors: ['#e3a857', '#8c4b2b'] },
+  { id: 'night-owl', name: 'Night Owl Espresso', origin: 'Sumatra · Guatemala', roast: 'Dark', notes: 'Dark cocoa, molasses, cedar', price: 18.00, img: 'night-owl.jpg', colors: ['#5c3a2e', '#1f1410'] }
 ];
 
 function findProduct(id) { return PRODUCTS.filter(function (p) { return p.id === id; })[0]; }
 function money(n) { return '$' + n.toFixed(2); }
 
 function bagArt(p) {
+  if (p.img) return '<img class="bag-photo" src="' + BASE + 'assets/img/' + p.img + '" alt="' + p.name + ' bag">';
   var g = 'g-' + p.id;
   return '<svg viewBox="0 0 200 240" role="img" aria-label="' + p.name + ' bag">' +
     '<defs><linearGradient id="' + g + '" x1="0" y1="0" x2="1" y2="1">' +
@@ -89,7 +89,7 @@ function renderLayout() {
     footer.innerHTML =
       '<div class="container footer-grid">' +
       '  <div><div class="logo">Ember <span>&amp;</span> Bean</div><p>Small-batch coffee, roasted to order.</p></div>' +
-      '  <div><h4>Shop</h4><a href="' + BASE + '#shop">All coffee</a><a href="' + BASE + 'product/?id=night-owl">Espresso</a><a href="' + BASE + 'product/?id=decaf-kenya">Decaf</a></div>' +
+      '  <div><h4>Shop</h4><a href="' + BASE + '#shop">All coffee</a><a href="' + BASE + 'product/?id=night-owl">Espresso</a></div>' +
       '  <div><h4>Help</h4><a href="' + BASE + '#story">About us</a><a href="mailto:hello@example.com" id="contact-link">Contact</a></div>' +
       '</div>' +
       '<div class="container fine">© ' + new Date().getFullYear() + ' Ember &amp; Bean Coffee Roasters</div>';
